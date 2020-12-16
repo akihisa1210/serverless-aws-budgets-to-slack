@@ -16,12 +16,13 @@ func handler() error {
 		return err
 	}
 
-	// 予測が作成されるには5週間分の使用状況データが必要
-	// message := fmt.Sprintf("実績値: %s USD、月末の予測値: %s USD",
-	// 	*spend.ActualSpend.Amount, *spend.ForecastedSpend.Amount)
+	forecastedSpend := "not exist"
+	if spend.ForecastedSpend != nil {
+		forecastedSpend = *spend.ForecastedSpend.Amount
+	}
 
-	message := fmt.Sprintf("実績値: %s USD、月末の予測値: 未定",
-		*spend.ActualSpend.Amount)
+	message := fmt.Sprintf("実績値: %s USD、月末の予測値: %s",
+		*spend.ActualSpend.Amount, forecastedSpend)
 
 	webhookMessage := &slack.WebhookMessage{Text: message}
 	return slack.PostWebhook(incomingWebhookURL, webhookMessage)
